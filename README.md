@@ -67,7 +67,7 @@ A frame has a type, a variable data field, and a semicolon terminator. This allo
 
 1 Byte | 1 Byte        | 1-64 bytes    | 1 Byte |
 -------|---------------|---------------|--------|
-*      | Control Value | Variable Data | ; |
+ *     | Control Value | Variable Data | ; |
 
 Any data in the variable data field must be escaped with a backslash: \\ \* and \;
 
