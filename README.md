@@ -61,4 +61,91 @@ Pin | Name      | Description
 
 # Serial Protocol
 
-TBD
+The Ardu32 makes use of a simple, autocorrelating framing protocol to allow rapid transmission of controller inputs, control functions, and additional expandability.
+
+A frame has a type, a variable data field, and a semicolon terminator. This allows for complex data to be transceived, while making controller status messages very short.
+
+1 Byte | 1 Byte        | 1-64 bytes    | 1 Byte |
+-------|---------------|---------------|--------|
+*      | Control Value | Variable Data | ; |
+
+Any data in the variable data field must be escaped with a backslash: \\ \* and \;
+
+## Control Values from Ardu32
+
+| Hex value | Size | Purpose             |
+|-----------|------|---------------------|
+| 0x01      |  1   | Controller A Bitmap |
+| 0x02      |  1   | Controller B Bitmap |
+| 0x03      |  1   | Analog Controller A |
+| 0x04      |  1   | Analog Controller B |
+| 0x05      |  1   | Video status message |
+| 0x06      |  V   | WiFi scan result    |
+| 0x07      |  1   | WiFi status         |
+| 0x08      |  1   | Socket status      |
+| 0x09      |  V   | Socket message     |
+| 0x0A      |  V   | Ardu32 firmware version |
+| 0x0B      |  1   | Pong                |
+| 0x0C      |  1   | Ping                |
+| 0x0D      |  V   | Cheat code          |
+
+### Controller A and B Bitmap
+
+| Bit | Description |
+|-----|-------------|
+|  0  | Up  |
+|  1  | Down |
+|  2  | Left |
+|  3  | Right |
+|  4  | Fire |
+|  5  | Fire 2 |
+|  6  | Fire 3 |
+|  7  | Input Change |
+
+### Analog Controller A and B
+
+Byte value of 0-255, depending on POT reading
+
+### Video Status Message
+
+| Hex Value | Purpose |
+|-----------|---------|
+|   0x01    | Disable cartridge video |
+|   0x02    | Ardu32 bootstrap video is disabled |
+
+The cartridge should always respond to disable video messages, as this allows the user to interrupt the cartridge and
+go back to the bootstrap screen for whatever reason. The program should suspend. 
+
+### WiFi Scan Result
+
+A future adapter cartridge (game genie style) and potentially a future console variant, will offer online WiFi play. 
+
+The first byte indicates the option number, and the rest of the packet is the WiFi name. Multiple scan results can occur. 
+
+A null packet (0x00) indicates the scan result is complete.
+
+### WiFi Status
+
+Used to indicate if the WiFi is connected or not.
+
+This section is still being written.
+
+
+
+## Control Values to Ardu32 from Cartridge
+
+| Hex value | Size | Purpose             |
+|-----------|------|---------------------|
+| 0x01      |  1   | Configure controller intervals |
+| 0x02      |  1   | Enable/Disable analog messages |
+| 0x03      |  1   | Video status message |
+| 0x04      |  1   | Scan WiFi            |
+| 0x05      |  V   | WiFi select          |
+| 0x06      |  1   | Query WiFi status    |
+| 0x07      |  1   | Query socket         |
+| 0x08      |  V   | Socket message       |
+| 0x09      |  1   | Query firmware version |
+| 0x0A      |  1   | Pong                 |
+| 0x0B      |  1   | Ping                 |
+
+
