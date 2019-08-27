@@ -82,7 +82,7 @@ Any data in the variable data field must be escaped with a backslash: \\ \* and 
 | 0x05      |  1   | Video status message |
 | 0x06      |  V   | WiFi scan result    |
 | 0x07      |  1   | WiFi status         |
-| 0x08      |  1   | Socket status      |
+| 0x08      |  4   | Socket status      |
 | 0x09      |  V   | Socket message     |
 | 0x0A      |  V   | Ardu32 firmware version |
 | 0x0B      |  1   | Pong                |
@@ -90,6 +90,8 @@ Any data in the variable data field must be escaped with a backslash: \\ \* and 
 | 0x0D      |  V   | Cheat code          |
 
 ### Controller A and B Bitmap
+
+The controller bitmaps contains the status of the game port. Bit 7, input change, is toggled when an input change occurs. This allows for simple logic functions to scan for changes before the controller input is processed again.
 
 | Bit | Description |
 |-----|-------------|
@@ -104,29 +106,37 @@ Any data in the variable data field must be escaped with a backslash: \\ \* and 
 
 ### Analog Controller A and B
 
-Byte value of 0-255, depending on POT reading
+Byte value of 0-255, depending on POT reading. 
 
 ### Video Status Message
 
 | Hex Value | Purpose |
 |-----------|---------|
-|   0x01    | Disable cartridge video |
-|   0x02    | Ardu32 bootstrap video is disabled |
+|   0x01    | Disable cartridge video, Ardu32 is enabling |
+|   0x02    | Ardu32 bootstrap video is disabled, enable cartridge video |
 
 The cartridge should always respond to disable video messages, as this allows the user to interrupt the cartridge and
 go back to the bootstrap screen for whatever reason. The program should suspend. 
 
 ### WiFi Scan Result
 
-A future adapter cartridge (game genie style) and potentially a future console variant, will offer online WiFi play. 
+A future adapter cartridge (ArduGenie) and potentially a future console variant, will offer online WiFi play. 
 
-The first byte indicates the option number, and the rest of the packet is the WiFi name. Multiple scan results can occur. 
+The first byte indicates the WiFi network option number, and the rest of the packet is the WiFi name. Multiple scan results can occur. 
 
 A null packet (0x00) indicates the scan result is complete.
 
 ### WiFi Status
 
 Used to indicate if the WiFi is connected or not.
+
+| Hex Value | Purpose |
+|-----------|---------|
+|   0x01    | WiFi connected |
+|   0x02    | WiFi disconnected |
+
+### Socket Status
+
 
 This section is still being written.
 
