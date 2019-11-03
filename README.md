@@ -13,6 +13,10 @@ The Ardu32 Bootstrap Software can detect if a cartridge is inserted through a GP
 
 The bootstrap software uses a standard 57600 baud TVOut compatible serial port to transmit its status, such as its video output state, controller state, and other specialized functions. This allows the cartridge to focus on video generation, audio generation, game play while the Ardu32 processor aggrigates 10 GPIO lines and 4 analog lines into a simple serial stream.
 
+# Detecting Cartridges
+
+PD6 (Arduino Pin 6) is configured on the Ardu32 side with a pullup. This means, when no cartridge is inserted (or when the cartridge doesn't want to announce its presence), the line is HIGH. When the cartridge is inserted (or wants to announce operation), the line is LOW. This can be done by permanently tying the pin to ground on the cart side or asserting it low using the on board cartridge AVR using a simple FET circuit. 
+
 # Cartridge Pinout
 
 The cartridge pinout is designed to be expandable, with unused lines tied to ground. It makes use of the commonly available DB37. The Ardu32 is female, while the cartridge is male.
@@ -42,7 +46,7 @@ Pin | Name      | Description
 19  | Reserved  | Tied to ground on Ardu32 V1
 20 | VCC  |5V DC, connected to main 1.5A regulator
 21 | Reserved  | Tied to ground on Ardu32 V1
-22 | PD6 |  Tied to PD6. Used for cart detection to disable video when HIGH.
+22 | PD6 |  Tied to PD6. Used for cart detection on Ard32 side. Active LOW (ie: grounded when cart plugged in)
 23 | Reserved  | Tied to ground on Ardu32 V1
 24 | Reserved  | Tied to ground on Ardu32 V1
 25 | Loopback | Looped back to pin 6 for Ardu32 V1 detection
